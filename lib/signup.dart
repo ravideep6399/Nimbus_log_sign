@@ -1,18 +1,17 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:nimbus_log_sign/signup.dart';
 import 'package:rive/rive.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpState extends State<SignUp> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  FocusNode confirmpasswordFocusNode = FocusNode();
 
   StateMachineController? controller;
 
@@ -24,11 +23,13 @@ class _SignInState extends State<SignIn> {
   SMIInput<bool>? trigFail;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmpasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   @override
   void initState() {
     emailFocusNode.addListener(emailFocus);
     passwordFocusNode.addListener(passwordFocus);
+    confirmpasswordFocusNode.addListener(confirmpasswordFocus);
   }
 
   @override
@@ -37,15 +38,20 @@ class _SignInState extends State<SignIn> {
     passwordFocusNode.removeListener(passwordFocus);
     emailController.dispose();
     passwordController.dispose();
-
+    confirmpasswordController.dispose();
     super.dispose();
   }
 
   void emailFocus() {
     isChecking?.change(emailFocusNode.hasFocus);
   }
+
   void passwordFocus() {
     isHandsUp?.change(passwordFocusNode.hasFocus);
+  }
+
+  void confirmpasswordFocus() {
+    isHandsUp?.change(confirmpasswordFocusNode.hasFocus);
   }
 
   @override
@@ -66,7 +72,7 @@ class _SignInState extends State<SignIn> {
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
-                    'SIGN IN',
+                    'SIGN UP',
                     style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.w600,
@@ -100,10 +106,12 @@ class _SignInState extends State<SignIn> {
               Container(
                 // height: 270,
                 width: 300,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: Colors.white,),
-                
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white,
+                ),
+
                 child: Form(
-                  
                   key: formKey,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -120,12 +128,10 @@ class _SignInState extends State<SignIn> {
                             textInputAction: TextInputAction.next,
                             decoration: const InputDecoration(
                               hintText: 'Email',
-                              
                               contentPadding:
                                   EdgeInsets.symmetric(horizontal: 15),
                               filled: true,
-                              fillColor:
-                                  Color.fromARGB(255, 255, 255, 255),
+                              fillColor: Color.fromARGB(255, 255, 255, 255),
                             ),
                             onChanged: (value) {
                               numLook?.change(value.length.toDouble());
@@ -144,12 +150,30 @@ class _SignInState extends State<SignIn> {
                             textInputAction: TextInputAction.done,
                             decoration: const InputDecoration(
                               hintText: 'Password',
-                             
                               contentPadding:
                                   EdgeInsets.symmetric(horizontal: 15),
                               filled: true,
-                              fillColor:
-                                  Color.fromARGB(255, 255, 255, 255),
+                              fillColor: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                            obscureText: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                          ),
+                        ),
+                        const SizedBox(height: 25),
+                        SizedBox(
+                          width: 260,
+                          height: 35,
+                          child: TextFormField(
+                            controller: confirmpasswordController,
+                            focusNode: confirmpasswordFocusNode,
+                            textInputAction: TextInputAction.done,
+                            decoration: const InputDecoration(
+                              hintText: 'Confirm Password',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 15),
+                              filled: true,
+                              fillColor: Color.fromARGB(255, 255, 255, 255),
                             ),
                             obscureText: true,
                             autovalidateMode:
@@ -172,76 +196,20 @@ class _SignInState extends State<SignIn> {
                               child: FittedBox(
                                 fit: BoxFit.contain,
                                 child: Text(
-                                  'Sign In',
+                                  'Sign Up',
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.black),
                                 ),
                               ),
                             ),
-                            
                           ),
-                          
                         ),
-                         const SizedBox(
-                            height: 15,
-                          ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                       ]),
                 ),
               ),
-              const SizedBox(
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 300,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 170,),
-                                GestureDetector(
-                                  onTap: (
-                                    // () =>
-                                    //   Navigator.of(context).push(MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         const ForgotPasswordPage(),
-                                    //   )
-                                    //   )
-                                      ){},
-                                  child: const Text(
-                                    'Forgot Password?',
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          RichText(
-                              text: TextSpan(
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700),
-                                  text: 'Don’t have an account? ',
-                                  children: [
-                                TextSpan(
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = (() =>
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignUp(),
-                                      )
-                                      )),
-                                    text: 'Sign Up',
-                                    style: const TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Colors.white,
-                                        fontSize: 14))
-                              ]))
             ],
           ),
         ),
